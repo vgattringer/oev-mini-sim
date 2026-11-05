@@ -1,5 +1,5 @@
 services:
-mosquitto:
+  mosquitto:
     image: eclipse-mosquitto:2
     ports:
       - "127.0.0.1:1883:1883"
@@ -7,5 +7,6 @@ mosquitto:
       - ./mosquitto/config:/mosquitto/config:ro
       - mosquitto-data:/mosquitto/data
     restart: unless-stopped
+
 volumes:
   mosquitto-data:

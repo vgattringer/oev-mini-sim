@@ -15,10 +15,10 @@
     "mqtt": "^5.16.1",
     "pg": "^8.23.1",
     "ws": "^8.22.1"
-  }
+  },
   "type": "module",
-"scripts": {
-  "start": "node src/index.js",
-  "dev": "node --watch src/index.js"
-}
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  }
 }

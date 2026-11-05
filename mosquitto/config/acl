@@ -1,0 +1,7 @@
+# Publisher: darf nur Abfahrten veröffentlichen, nichts lesen
+user publisher
+topic write oev/wien/haltestelle/+/abfahrten
+
+# Backend: darf nur lesen, nicht veröffentlichen
+user backend
+topic read oev/wien/haltestelle/+/abfahrten

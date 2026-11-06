@@ -11,6 +11,11 @@ function startMqttSubscriber(onMessageReceived) {
 
     client.on('connect', () => {
         console.log('MQTT-Verbindung steht');
+
+        // QoS (Quality of Service) = Zustellgarantie von MQTT:
+        // 0 = höchstens einmal, 1 = mindestens einmal, 2 = genau einmal.
+        // Mit 1 wiederholt der Broker, bis wir den Empfang bestätigen.
+        // Doppelte Nachrichten sind möglich, aber unkritisch, weil der Upsert dieselbe Zeile einfach noch einmal überschreibt.
         client.subscribe(TOPIC_FILTER, { qos: 1 }, (error) => {
             if (error) {
                 console.error('MQTT-Abo fehlgeschlagen:', error.message);

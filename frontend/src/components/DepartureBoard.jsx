@@ -1,23 +1,39 @@
+import Badge from 'react-bootstrap/Badge'
+import Card from 'react-bootstrap/Card'
+import ListGroup from 'react-bootstrap/ListGroup'
+import { formatClockTime } from '../utils/format-clock-time.js'
+
 function DepartureBoard({ monitorData }) {
     const monitor = monitorData.data.monitors[0]
     const stopTitle = monitor.locationStop.properties.title
 
     return (
         <section>
-            <h1>{stopTitle}</h1>
+            <h1 className="h3 mb-4">{stopTitle}</h1>
             {monitor.lines.map((line) => (
-                <div key={`${line.lineId}-${line.direction}`}>
-                    <h2>
+                <Card key={`${line.lineId}-${line.direction}`} className="mb-3">
+                    <Card.Header>
                         Linie {line.name} - Richtung: {line.towards}
-                    </h2>
-                    <ul>
-                        {line.departures.departure.map((departure) => (
-                            <li key={departure.departureTime.timePlanned}>
-                                kommt in {departure.departureTime.countdown} Min.
-                            </li>
+                    </Card.Header>
+                    <ListGroup variant="flush">
+                        {line.departures.departure.map(({ departureTime }) => (
+                            <ListGroup.Item
+                                key={departureTime.timePlanned}
+                                className="d-flex justify-content-between align-items-center"
+                            >
+                                <span>kommt in {departureTime.countdown} Min.</span>
+                                <span>
+                                    {formatClockTime(departureTime.timeReal ?? departureTime.timePlanned)}
+                                    {departureTime.timeReal && (
+                                        <Badge bg="success" className="ms-2">
+                                            Echtzeit
+                                        </Badge>
+                                    )}
+                                </span>
+                            </ListGroup.Item>
                         ))}
-                    </ul>
-                </div>
+                    </ListGroup>
+                </Card>
             ))}
         </section>
     )

@@ -1,3 +1,6 @@
+/**
+ * @deprecated Ersetzt durch openDepartureSocket, nur noch für die Fehlersuche.
+ */
 export async function fetchDepartures(stopId) {
     const response = await fetch(`/api/departures/${encodeURIComponent(stopId)}`)
 

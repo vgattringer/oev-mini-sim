@@ -3,6 +3,7 @@ import { checkDatabaseConnection } from './database.js';
 import { startMqttSubscriber } from './mqtt-subscriber.js';
 import { parseMonitorMessage } from './monitor-validator.js';
 import { saveMonitor, findMonitorPayloadByRbl  } from './monitor-storage.js';
+import { attachWebSocketServer, broadcastMonitor } from './websocket-server.js';
 
 const PORT = 3000;
 
@@ -17,10 +18,13 @@ async function handleMqttMessage(topic, payloadBuffer) {
 
     try {
         await saveMonitor(monitor);
-        console.log(`Gespeichert: rbl ${monitor.rbl} (${monitor.title})`);
     } catch (error) {
         console.error(`Speichern fehlgeschlagen (rbl ${monitor.rbl}): ${error.message}`);
+        return;
     }
+
+    console.log(`Gespeichert: rbl ${monitor.rbl} (${monitor.title})`);
+    broadcastMonitor(monitor.rbl, monitor.payload);
 }
 
 async function startBackend() {
@@ -56,11 +60,13 @@ async function startBackend() {
             console.error(`Abfrage fehlgeschlagen (rbl ${rbl}): ${error.message}`);
             response.status(500).json({ message: { value: 'Interner Fehler' } });
         }
-    });    
+    });
 
-    app.listen(PORT, () => {
+    const httpServer = app.listen(PORT, () => {
         console.log(`Backend läuft auf http://localhost:${PORT}`);
     });
+
+    attachWebSocketServer(httpServer, findMonitorPayloadByRbl);
 }
 
 startBackend().catch((error) => {

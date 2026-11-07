@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { openDepartureSocket } from './api/departure-socket.js'
 import DepartureBoard from './components/DepartureBoard.jsx'
 import { readStopId } from './utils/read-stop-id.js'
+import Alert from 'react-bootstrap/Alert'
+import Spinner from 'react-bootstrap/Spinner'
 
 function App() {
     const stopId = readStopId(window.location.search)
@@ -37,15 +39,20 @@ function App() {
     }, [stopId])
 
     if (stopId === null) {
-        return <p>Bitte eine Haltestelle angeben, zum Beispiel ?stopId=252</p>
+        return <Alert variant="info">Bitte eine Haltestelle angeben, zum Beispiel ?stopId=252</Alert>
     }
 
     if (errorMessage) {
-        return <p>Fehler: {errorMessage}</p>
+        return <Alert variant="danger">Fehler: {errorMessage}</Alert>
     }
 
     if (monitorData === null) {
-                return <p>Warte auf Daten für Haltestelle {stopId} ...</p>
+        return (
+            <div className="d-flex align-items-center gap-2">
+                <Spinner animation="border" size="sm" role="status" />
+                <span>Warte auf Daten für Haltestelle {stopId} ...</span>
+            </div>
+        )
     }
 
     return <DepartureBoard monitorData={monitorData} />

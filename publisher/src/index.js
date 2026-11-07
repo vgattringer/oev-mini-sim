@@ -39,4 +39,4 @@ client.on('error', (error) => {
 
 setInterval(() => {
     if (client.connected) publishAllMessages();
-}, 10_000);
+}, 5_000);

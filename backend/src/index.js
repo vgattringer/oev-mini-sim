@@ -4,6 +4,7 @@ import { startMqttSubscriber } from './mqtt-subscriber.js';
 import { parseMonitorMessage } from './monitor-validator.js';
 import { saveMonitor, findMonitorPayloadByRbl  } from './monitor-storage.js';
 import { attachWebSocketServer, broadcastMonitor } from './websocket-server.js';
+import { loadStopList } from './stop-list.js';
 
 const PORT = 3000;
 
@@ -30,6 +31,9 @@ async function handleMqttMessage(topic, payloadBuffer) {
 async function startBackend() {
     await checkDatabaseConnection();
 
+    const stops = loadStopList();
+    console.log(`Haltestellenliste geladen: ${stops.length} Einträge`);
+
     // Es wird die Funktion handleMqttMessage weitergegeben 
     // (ohne Klammern dahinter, sie wird also nicht aufgerufen). 
     // Der Subscriber ruft sie später bei jeder Nachricht selbst auf. 
@@ -40,6 +44,10 @@ async function startBackend() {
 
     app.get('/api/health', (request, response) => {
         response.json({ status: 'ok' });
+    });
+
+    app.get('/api/stops', (request, response) => {
+        response.json(stops);
     });
 
     app.get('/api/departures/:stopId', async (request, response) => {

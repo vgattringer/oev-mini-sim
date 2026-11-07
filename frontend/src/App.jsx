@@ -45,7 +45,7 @@ function App() {
     }
 
     if (monitorData === null) {
-        return <p>Lade Abfahrten ...</p>
+                return <p>Warte auf Daten für Haltestelle {stopId} ...</p>
     }
 
     return <DepartureBoard monitorData={monitorData} />

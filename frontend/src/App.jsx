@@ -3,6 +3,8 @@ import { fetchDepartures } from './api/departures.js'
 import DepartureBoard from './components/DepartureBoard.jsx'
 import { readStopId } from './utils/read-stop-id.js'
 
+const POLLING_INTERVAL_IN_MILLISECONDS = 5000
+
 function App() {
     const stopId = readStopId(window.location.search)
     const [monitorData, setMonitorData] = useState(null)
@@ -13,9 +15,30 @@ function App() {
             return
         }
 
-        fetchDepartures(stopId)
-            .then(setMonitorData)
-            .catch((error) => setErrorMessage(error.message))
+        let isActive = true
+
+        async function loadDepartures() {
+            try {
+                const loadedMonitorData = await fetchDepartures(stopId)
+
+                if (isActive) {
+                    setMonitorData(loadedMonitorData)
+                    setErrorMessage('')
+                }
+            } catch (error) {
+                if (isActive) {
+                    setErrorMessage(error.message)
+                }
+            }
+        }
+
+        loadDepartures()
+        const intervalId = setInterval(loadDepartures, POLLING_INTERVAL_IN_MILLISECONDS)
+
+        return () => {
+            isActive = false
+            clearInterval(intervalId)
+        }
     }, [stopId])
 
     if (stopId === null) {

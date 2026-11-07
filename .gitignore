@@ -3,3 +3,5 @@ node_modules/
 
 mosquitto/config/passwd
 mosquitto/config/acl
+
+data/haltestellen.csv

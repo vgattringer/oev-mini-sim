@@ -3,5 +3,15 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+    plugins: [react()],
+    server: {
+        proxy: {
+            '/api': 'http://localhost:3000',
+            '/ws': {
+                target: 'http://localhost:3000',
+                // auch der WebSocket-Verkehr wird weitergeleitet
+                ws: true,
+            },
+        },
+    },
 })

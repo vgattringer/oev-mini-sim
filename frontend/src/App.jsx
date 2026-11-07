@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-import { fetchDepartures } from './api/departures.js'
+import { openDepartureSocket } from './api/departure-socket.js'
 import DepartureBoard from './components/DepartureBoard.jsx'
 import { readStopId } from './utils/read-stop-id.js'
-
-const POLLING_INTERVAL_IN_MILLISECONDS = 5000
 
 function App() {
     const stopId = readStopId(window.location.search)
@@ -17,27 +15,24 @@ function App() {
 
         let isActive = true
 
-        async function loadDepartures() {
-            try {
-                const loadedMonitorData = await fetchDepartures(stopId)
-
+        const socket = openDepartureSocket(
+            stopId,
+            (loadedMonitorData) => {
                 if (isActive) {
                     setMonitorData(loadedMonitorData)
                     setErrorMessage('')
                 }
-            } catch (error) {
+            },
+            (problemMessage) => {
                 if (isActive) {
-                    setErrorMessage(error.message)
+                    setErrorMessage(problemMessage)
                 }
-            }
-        }
-
-        loadDepartures()
-        const intervalId = setInterval(loadDepartures, POLLING_INTERVAL_IN_MILLISECONDS)
+            },
+        )
 
         return () => {
             isActive = false
-            clearInterval(intervalId)
+            socket.close()
         }
     }, [stopId])
 

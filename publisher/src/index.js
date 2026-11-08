@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-import { fakeDataSource as dataSource } from './fake-daten.js';
+import { wienerLinienDataSource as dataSource } from './wienerlinien.js';
 
 const url = 'mqtt://127.0.0.1:1883'; // lokale Broker-Adresse
 const password = process.env.MQTT_PUBLISHER_PASSWORD;
@@ -39,4 +39,4 @@ client.on('error', (error) => {
 
 setInterval(() => {
     if (client.connected) publishAllMessages();
-}, 5_000);
+}, 20_000);

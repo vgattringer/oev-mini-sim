@@ -1,0 +1,4 @@
+{
+    "description": "Haltepunkte (RBL) rund um Volkstheater und Parlament mit Echtzeitdaten: U2, U3, Strassenbahn 1, 2, 49, 71, D, Bus 46, 48A. Bewusst fest hinterlegt, siehe README.",
+    "rbls": [15, 49, 1375, 1401, 1440, 1482, 4206, 4209, 4908, 4909]
+}

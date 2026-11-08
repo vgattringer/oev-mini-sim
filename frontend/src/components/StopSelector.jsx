@@ -87,6 +87,8 @@ function StopSelector({ stops, selectedStopId, isUnknownStop }) {
             <div className="position-relative">
                 <Form.Control
                     type="text"
+                    className="border border-3"
+                    style={{ paddingRight: '2.5rem' }}
                     placeholder="Haltestelle suchen ..."
                     aria-label="Haltestelle suchen oder auswählen"
                     autoComplete="off"
@@ -96,6 +98,21 @@ function StopSelector({ stops, selectedStopId, isUnknownStop }) {
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                 />
+                <span
+                    className="position-absolute top-50 end-0 translate-middle-y pe-3 text-primary"
+                    style={{ pointerEvents: 'none' }}
+                    aria-hidden="true"
+                >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path
+                            d="M2 5l6 6 6-6"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </span>
                 {isOpen && (
                     <ListGroup
                         className="position-absolute w-100 shadow"

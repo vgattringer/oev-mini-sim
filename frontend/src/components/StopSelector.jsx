@@ -70,8 +70,12 @@ function StopSelector({ stops, selectedStopId, isUnknownStop }) {
             event.preventDefault()
             setActiveIndex((currentIndex) => Math.max(currentIndex - 1, 0))
         }
-        if (event.key === 'Enter' && visibleStops.length > 0) {
-            selectStop(visibleStops[activeIndex])
+        if (event.key === 'Enter') {
+            if (normalizedSearchText === '') {
+                window.location.search = ''
+            } else if (visibleStops.length > 0) {
+                selectStop(visibleStops[activeIndex])
+            }
         }
         if (event.key === 'Escape') {
             event.target.blur()

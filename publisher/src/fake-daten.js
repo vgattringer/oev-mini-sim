@@ -1,6 +1,21 @@
-// Fake-Datenquelle im Originalformat der Wiener-Linien-Monitor-Antwort.
-// RBL 252 "Rathaus U" und Linie 2 sind echt (Werte aus einer echten Antwort).
-// RBL 9001 "Teststation" und Linie D sind erfunden, ohne Echtzeitdaten.
+/**
+ * @fileoverview Fake-Datenquelle im Originalformat der Wiener-Linien-Monitor-Antwort.
+ *
+ * Sie erfüllt wie wienerlinien.js den Vertrag DataSource (siehe data-source.js)
+ * und dient zum Testen ohne Internet und ohne das Abfragelimit der Wiener Linien.
+ *
+ * RBL 252 "Rathaus U" und Linie 2 sind echt (Werte aus einer echten Antwort).
+ * RBL 9001 "Teststation" und Linie D sind erfunden, ohne Echtzeitdaten.
+ *
+ * Verwendung: In index.js statt wienerLinienDataSource die fakeDataSource aus
+ * dieser Datei verwenden.
+ *
+ * Hinweis: 252 und 9001 stehen nicht in data/echtzeit-haltepunkte.json. Das Frontend
+ * zeigt sie deshalb nicht an. Zum Ansehen der Daten dient GET /api/departures/<RBL>
+ * (nur Fehlersuche).
+ *
+ * @see data-source.js
+ */
 
 const DEPARTURES_PER_LINE = 2; // das Original liefert zehn
 const MINUTES_UNTIL_FIRST_DEPARTURE = 1;

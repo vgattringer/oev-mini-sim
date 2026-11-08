@@ -4,21 +4,39 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import { formatClockTime } from '../utils/format-clock-time.js'
 import VehicleTypeIcon from './VehicleTypeIcon.jsx'
 
-function DepartureBoard({ monitorData }) {
-    const monitors = monitorData.data.monitors
-    const stopTitle = monitors[0].locationStop.properties.title
-    const lines = monitors.flatMap((monitor) => monitor.lines)
+function DepartureBoard({ monitorDataByStopId }) {
+    const cards = Object.entries(monitorDataByStopId).flatMap(([stopId, monitorData]) =>
+        monitorData.data.monitors.flatMap((monitor) =>
+            monitor.lines.map((line) => ({
+                stopId,
+                stopTitle: monitor.locationStop.properties.title,
+                line,
+            })),
+        ),
+    )
+
+    cards.sort(
+        (first, second) =>
+            first.line.name.localeCompare(second.line.name, 'de', { numeric: true }) ||
+            first.line.towards.localeCompare(second.line.towards, 'de') ||
+            Number(first.stopId) - Number(second.stopId),
+    )
 
     return (
         <section>
-            <h1 className="h3 mb-4">{stopTitle}</h1>
-            {lines.map((line) => (
-                <Card key={`${line.lineId}-${line.towards}`} className="mb-3">
+            <h1 className="h3 mb-4">Abfahrten</h1>
+            {cards.map(({ stopId, stopTitle, line }) => (
+                <Card key={`${stopId}-${line.lineId}-${line.towards}`} className="mb-3">
                     <Card.Header className="d-flex align-items-center gap-2">
                         <VehicleTypeIcon type={line.type} />
-                        <span>
-                            Linie {line.name} - Richtung: {line.towards}
-                        </span>
+                        <div>
+                            <div>
+                                Linie {line.name} - Richtung: {line.towards}
+                            </div>
+                            <small className="text-muted">
+                                {stopTitle} (RBL {stopId})
+                            </small>
+                        </div>
                     </Card.Header>
                     <ListGroup variant="flush">
                         {line.departures.departure.map(({ departureTime }) => (

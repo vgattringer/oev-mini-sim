@@ -5,14 +5,15 @@ import { formatClockTime } from '../utils/format-clock-time.js'
 import VehicleTypeIcon from './VehicleTypeIcon.jsx'
 
 function DepartureBoard({ monitorData }) {
-    const monitor = monitorData.data.monitors[0]
-    const stopTitle = monitor.locationStop.properties.title
+    const monitors = monitorData.data.monitors
+    const stopTitle = monitors[0].locationStop.properties.title
+    const lines = monitors.flatMap((monitor) => monitor.lines)
 
     return (
         <section>
             <h1 className="h3 mb-4">{stopTitle}</h1>
-            {monitor.lines.map((line) => (
-                <Card key={`${line.lineId}-${line.direction}`} className="mb-3">
+            {lines.map((line) => (
+                <Card key={`${line.lineId}-${line.towards}`} className="mb-3">
                     <Card.Header className="d-flex align-items-center gap-2">
                         <VehicleTypeIcon type={line.type} />
                         <span>

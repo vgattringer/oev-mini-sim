@@ -4,6 +4,7 @@ import { loadStopList } from './api/stop-list.js'
 import DepartureBoard from './components/DepartureBoard.jsx'
 import StopSelector from './components/StopSelector.jsx'
 import { readStopIds } from './utils/read-stop-ids.js'
+import flowDiagramUrl from './assets/ablauf.svg'
 import Alert from 'react-bootstrap/Alert'
 import Spinner from 'react-bootstrap/Spinner'
 
@@ -106,6 +107,24 @@ function App() {
 
     return (
         <>
+            <header className="mb-4">
+                <h1 className="h3">ÖV-Mini-Simulation</h1>
+                <p className="mb-1">
+                    Ein Lernprojekt zu Echtzeitdaten im öffentlichen Verkehr: Die aktuellen Abfahrten der Wiener Linien
+                    werden über MQTT (ein leichtgewichtiges Nachrichtenprotokoll) und den Broker Mosquitto an das Backend
+                    geschickt, in PostgreSQL gespeichert und per WebSocket live auf dieser Seite angezeigt. Der
+                    Schwerpunkt liegt auf MQTT und der Verarbeitung von Echtzeitdaten. Zu sehen sind zehn ausgewählte
+                    Haltepunkte rund ums Volkstheater und Parlament.
+                </p>
+                <img
+                    src={flowDiagramUrl}
+                    alt="Ablauf: Der Publisher fragt die Wiener Linien ab und sendet die Daten per MQTT über Mosquitto an das Backend. Das Backend speichert sie in PostgreSQL und schickt sie per WebSocket an das Frontend."
+                    className="img-fluid d-block my-3"
+                />
+                <p className="text-muted small mb-0">
+                    Architektur und Start des Projekts stehen in der README. Stand: 8. November 2026
+                </p>
+            </header>
             <div className="mb-3">
                 <StopSelector stops={stops} selectedStopId={selectedStopId} isUnknownStop={isUnknownStop} />
             </div>

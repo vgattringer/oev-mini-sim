@@ -24,7 +24,7 @@ function DepartureBoard({ monitorDataByStopId }) {
 
     return (
         <section>
-            <h1 className="h3 mb-4">Abfahrten</h1>
+            <h2 className="h4 mb-4">Abfahrten</h2>
             {cards.map(({ stopId, stopTitle, line }) => (
                 <Card key={`${stopId}-${line.lineId}-${line.towards}`} className="mb-3">
                     <Card.Header className="d-flex align-items-center gap-2">

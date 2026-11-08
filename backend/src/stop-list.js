@@ -5,9 +5,13 @@ import path from 'node:path';
 // Datei wienerlinien-ogd-haltepunkte.csv
 const STOPS_FILE_PATH = path.join(import.meta.dirname, '..', '..', 'data', 'haltepunkte.csv');
 
+const SUPPORTED_STOP_IDS_FILE_PATH = path.join(import.meta.dirname, '..', '..', 'data', 'echtzeit-haltepunkte.json');
+
 export function loadStopList() {
     const fileContent = readFileSync(STOPS_FILE_PATH, 'utf-8');
     const lines = fileContent.split(/\r?\n/).slice(1);
+
+    const supportedStopIds = new Set(JSON.parse(readFileSync(SUPPORTED_STOP_IDS_FILE_PATH, 'utf-8')).rbls);
 
     const stops = [];
     for (const line of lines) {
@@ -19,7 +23,11 @@ export function loadStopList() {
         if (title === '') {
             continue;
         }
-        stops.push({ rbl: Number(columns[0]), title });
+        const rbl = Number(columns[0]);
+        if (!supportedStopIds.has(rbl)) {
+            continue;
+        }
+        stops.push({ rbl, title });
     }
 
     stops.sort((first, second) => first.title.localeCompare(second.title, 'de') || first.rbl - second.rbl);

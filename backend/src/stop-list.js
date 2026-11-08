@@ -15,7 +15,11 @@ export function loadStopList() {
             continue;
         }
         const columns = line.split(';');
-        stops.push({ rbl: Number(columns[0]), title: columns[2] });
+        const title = columns[2].trim();
+        if (title === '') {
+            continue;
+        }
+        stops.push({ rbl: Number(columns[0]), title });
     }
 
     stops.sort((first, second) => first.title.localeCompare(second.title, 'de') || first.rbl - second.rbl);

@@ -16,9 +16,17 @@ const STOP_IDS = JSON.parse(readFileSync(STOP_IDS_FILE_PATH, 'utf-8')).rbls;
 // der Wiener Linien (Code 316) nicht erreicht wird.
 async function fetchMonitorResponse() {
     const query = STOP_IDS.map((stopId) => `stopId=${stopId}`).join('&');
+    const url = `${MONITOR_URL}?${query}`;
+    const started = Date.now();
     const response = await fetch(`${MONITOR_URL}?${query}`, {
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MILLISECONDS),
     });
+
+    // Debug-Ausgabe, falls DEBUG_HTTP gesetzt ist; Starten mit DEBUG_HTTP=1 node --env-file=../.env src/index.js
+    if (process.env.DEBUG_HTTP) {
+        console.log(`[WL] GET ${url} -> ${response.status} (${Date.now() - started} ms)`);
+    }
+    
     if (!response.ok) {
         const retryAfter = response.headers.get('retry-after');
         const bodyStart = (await response.text()).replace(/\s+/g, ' ').slice(0, 200);
